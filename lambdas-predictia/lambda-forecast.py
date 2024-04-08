@@ -10,7 +10,7 @@ from io import StringIO
 def lambda_handler(event, context):
     # Configura el nombre del bucket y el nombre del archivo
     bucket_name = os.getenv("BUCKET_NAME")
-    file_name = 'forecast-data.csv'
+    file_name = 'forecast/forecast-data.csv'
 
     # Crea un cliente de S3
     s3_client = boto3.client('s3')
