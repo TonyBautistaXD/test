@@ -8,7 +8,7 @@ s3_client = boto3.client('s3')
 def lambda_handler(event, context):
     # Especificar el nombre del bucket y la clave del archivo
     bucket_name = os.getenv("BUCKET_NAME")  # Reemplaza con el nombre de tu bucket
-    file_key = 'insights.txt'  # Reemplaza con la clave del archivo en S3
+    file_key = 'insights/insights.txt'  # Reemplaza con la clave del archivo en S3
 
     try:
         # Obtener el archivo de S3
