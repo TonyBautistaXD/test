@@ -9,8 +9,13 @@ cognito_pool_id = os.getenv("pool_id")
 cognito_client = boto3.client('cognito-idp', region_name=COGNITO_REGION)
 ses_client = boto3.client('ses', region_name=SES_REGION)
 s3_client = boto3.client('s3', region_name=COGNITO_REGION)
+lambda_client = boto3.client('lambda')
 
 def get_last_created_user(pool_id):
+    target_lambda_function_name = 'lambda-bedrock'
+    lambda_client.invoke(
+        FunctionName=target_lambda_function_name
+    )
     users_resp = cognito_client.list_users(UserPoolId=pool_id, AttributesToGet=['email'])
     usernames = []
     for user in users_resp['Users']:
@@ -25,7 +30,7 @@ def get_last_created_user(pool_id):
 def send_email_with_ses(to_email, subject, body):
     try:
         response = ses_client.send_email(
-            Source='email@valid.com',  # Replace with your verified sender email address
+            Source='valid@email.com',  # Replace with your verified sender email address
             Destination={'ToAddresses': [to_email]},
             Message={
                 'Subject': {'Data': subject},
