@@ -12,10 +12,10 @@ s3_client = boto3.client('s3', region_name=COGNITO_REGION)
 lambda_client = boto3.client('lambda')
 
 def get_last_created_user(pool_id):
-    target_lambda_function_name = 'lambda-bedrock'
-    lambda_client.invoke(
-        FunctionName=target_lambda_function_name
-    )
+    # target_lambda_function_name = 'lambda-bedrock'
+    # lambda_client.invoke(
+    #     FunctionName=target_lambda_function_name
+    # )
     users_resp = cognito_client.list_users(UserPoolId=pool_id, AttributesToGet=['email'])
     usernames = []
     for user in users_resp['Users']:
@@ -60,9 +60,11 @@ def lambda_handler(event, context):
         email = last_user[0]["email"]
         bucket_name = 'predictiadata'  # Replace with your bucket name
         object_name = 'forecast/forecast-data.csv'  # Assuming the file is in the root of the bucket
+        object2_name = 'insights/insights_simplified.pdf'  # Assuming the file is in the root of the bucket
         presigned_url = create_presigned_url(bucket_name, object_name)
+        presigned_url2 = create_presigned_url(bucket_name, object2_name)
         subject = "Analysis Process Finished"
-        body = f"Analysis process has been completed. You can download the file from the following link: {presigned_url}"
+        body = f"Analysis process has been completed. You can download the file from the following link: {presigned_url}\nAnd the pdf witht he simplified predictions from: {presigned_url2}"
         send_email_response = send_email_with_ses(email, subject, body)
         response = {
             'statusCode': 200,
